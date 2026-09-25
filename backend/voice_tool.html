@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alligent Voice Dispatch Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #8B1E1E;
+      --primary-hover: #731818;
+      --primary-light: #FEF2F2;
+      --slate-900: #0F172A;
+      --slate-800: #1E293B;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-400: #94A3B8;
+      --slate-200: #E2E8F0;
+      --slate-100: #F1F5F9;
+      --slate-50: #F8FAFC;
+      --green-600: #16A34A;
+      --green-50: #F0FDF4;
+      --amber-600: #D97706;
+      --amber-50: #FFFBEB;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background-color: #0B0F17;
+      color: var(--slate-100);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 760px;
+      background: var(--slate-900);
+      border: 1px solid #1E293B;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1A0D0D 0%, #2A1010 100%);
+      border-bottom: 1px solid #3B1B1B;
+      padding: 28px 32px;
+      position: relative;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #DC2626, #EF4444, #F87171);
+    }
+
+    .brand-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      font-weight: 700;
+      color: #F87171;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-tag .dot {
+      width: 8px;
+      height: 8px;
+      background: #EF4444;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #EF4444;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+    }
+
+    .header p {
+      font-size: 13px;
+      color: var(--slate-400);
+      line-height: 1.5;
+    }
+
+    .body-content {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--slate-400);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .input-text, .select-box {
+      width: 100%;
+      background: #0B0F17;
+      border: 1px solid #273549;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #FFFFFF;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .input-text:focus, .select-box:focus {
+      outline: none;
+      border-color: #EF4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+    }
+
+    .select-box { cursor: pointer; }
+
+    /* Preset Chips */
+    .presets-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--slate-400);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .presets-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .preset-chip {
+      background: #141C2B;
+      border: 1px solid #1E2D42;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--slate-200);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .preset-chip:hover {
+      background: #1A263B;
+      border-color: #385175;
+      color: #FFFFFF;
+      transform: translateX(2px);
+    }
+
+    .preset-chip .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      padding: 2px 6px;
+      background: #253347;
+      border-radius: 4px;
+      color: #94A3B8;
+      margin-left: 10px;
+      flex-shrink: 0;
+    }
+
+    /* Textarea */
+    .textarea-wrapper {
+      position: relative;
+    }
+
+    textarea.sentence-box {
+      width: 100%;
+      min-height: 120px;
+      background: #0B0F17;
+      border: 1px solid #273549;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 15px;
+      line-height: 1.5;
+      color: #FFFFFF;
+      font-family: inherit;
+      resize: vertical;
+      transition: all 0.2s;
+    }
+
+    textarea.sentence-box:focus {
+      outline: none;
+      border-color: #EF4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+    }
+
+    .char-count {
+      position: absolute;
+      bottom: 10px;
+      right: 14px;
+      font-size: 11px;
+      color: var(--slate-600);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Checkbox */
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--slate-300);
+    }
+
+    .checkbox-row input {
+      width: 16px;
+      height: 16px;
+      accent-color: #EF4444;
+      cursor: pointer;
+    }
+
+    /* Call Button */
+    .btn-call {
+      background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 10px;
+      padding: 16px 24px;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 8px 20px -6px rgba(220, 38, 38, 0.5);
+      transition: all 0.2s ease;
+      width: 100%;
+      text-transform: uppercase;
+    }
+
+    .btn-call:hover:not(:disabled) {
+      background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px -6px rgba(220, 38, 38, 0.6);
+    }
+
+    .btn-call:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* Live Output Status */
+    .status-card {
+      display: none;
+      background: #111A27;
+      border: 1px solid #1E2D44;
+      border-radius: 10px;
+      padding: 18px 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .status-card.success {
+      border-color: #166534;
+      background: #092013;
+    }
+
+    .status-card.error {
+      border-color: #991B1B;
+      background: #250B0B;
+    }
+
+    .status-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .status-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .status-badge.queued {
+      background: #166534;
+      color: #86EFAC;
+    }
+
+    .status-badge.failed {
+      background: #991B1B;
+      color: #FCA5A5;
+    }
+
+    .status-body {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--slate-300);
+    }
+
+    .status-body code {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(255,255,255,0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #F8FAFC;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 12px;
+      color: #64748B;
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="brand-tag">
+        <span class="dot"></span>
+        ALLIGENT &bull; LIVE VOICE ALERT DISPATCH
+      </div>
+      <h1>Industrial Mobile Voice Call Tool</h1>
+      <p>Select or type any custom sentence. The Alligent Twilio synthesizer will call your mobile phone and speak it aloud immediately.</p>
+    </div>
+
+    <div class="body-content">
+      <!-- Phone & Machine Inputs -->
+      <div class="form-row">
+        <div class="field-group">
+          <label class="field-label" for="phoneInput">Destination Mobile Number</label>
+          <input type="text" id="phoneInput" class="input-text" value="+917019934791" placeholder="+91..." />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="machineSelect">Machine / Unit ID</label>
+          <select id="machineSelect" class="select-box">
+            <option value="M-04">M-04 &bull; High-Speed CNC Unit</option>
+            <option value="M-01">M-01 &bull; Raw Material Ingestion</option>
+            <option value="M-02">M-02 &bull; Automated Vision Quality</option>
+            <option value="M-03">M-03 &bull; Robotic Pick-and-Place</option>
+            <option value="M-05">M-05 &bull; Packaging & Sorting Gate</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Voice Selector & Greeting Toggle -->
+      <div class="form-row">
+        <div class="field-group">
+          <label class="field-label" for="voiceSelect">AI Voice Persona</label>
+          <select id="voiceSelect" class="select-box">
+            <option value="Polly.Aditi">Polly.Aditi (Natural Indian English)</option>
+            <option value="alice" selected>Alice (Standard Clear Alert)</option>
+            <option value="Polly.Amy">Polly.Amy (UK English)</option>
+            <option value="woman">Woman (Classic Synthesizer)</option>
+            <option value="man">Man (Classic Synthesizer)</option>
+          </select>
+        </div>
+        <div class="field-group" style="justify-content: flex-end; padding-bottom: 8px;">
+          <label class="checkbox-row">
+            <input type="checkbox" id="introCheck" checked />
+            <span>Include intro: <em>"Hello Prajwal. Alligent speaking, this machine is facing issue, please look after it."</em></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Presets -->
+      <div>
+        <div class="presets-label">
+          <span>Quick Preset Sentences (Click to load)</span>
+          <span style="font-weight: 400; text-transform: none; color: #64748B;">Click any to select</span>
+        </div>
+        <div class="presets-container" id="presetsList">
+          <button type="button" class="preset-chip" onclick="loadSentence(this)">
+            <span>Attention Prajwal, Machine M-04 spindle bearing has reached critical vibration threshold of 6.8 millimeters per second.</span>
+            <span class="tag">CRITICAL</span>
+          </button>
+          <button type="button" class="preset-chip" onclick="loadSentence(this)">
+            <span>Emergency Alert. Temperature on line 3 processing unit has reached 84 degrees Celsius. Immediate inspection required.</span>
+            <span class="tag">THERMAL</span>
+          </button>
+          <button type="button" class="preset-chip" onclick="loadSentence(this)">
+            <span>Alligent predictive maintenance warning. Failure projected in 18 days with expected loss of 960 products.</span>
+            <span class="tag">PROGNOSTIC</span>
+          </button>
+          <button type="button" class="preset-chip" onclick="loadSentence(this)">
+            <span>Coolant delivery flow rate has dropped by 48 percent. Please clean the delivery line before shift changeover.</span>
+            <span class="tag">COOLANT</span>
+          </button>
+          <button type="button" class="preset-chip" onclick="loadSentence(this)">
+            <span>Investigation complete for Case INV-4811. The full 21-section engineering report has been sent to your email.</span>
+            <span class="tag">REPORT</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Sentence Textarea -->
+      <div class="field-group">
+        <label class="field-label" for="sentenceInput">Custom Spoken Sentence (AI will speak this exact text)</label>
+        <div class="textarea-wrapper">
+          <textarea id="sentenceInput" class="sentence-box" placeholder="Type the exact sentence you want the phone call to speak to your mobile phone...">Machine M-04 spindle bearing has reached critical vibration threshold of 6.8 millimeters per second. If unaddressed, 960 products will decline with failure projected on December 03, 2026. Please look after it immediately.</textarea>
+          <div class="char-count" id="charCount">0 characters</div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div>
+        <button id="callBtn" class="btn-call" onclick="triggerCall()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call My Mobile Now & Speak This Sentence</span>
+        </button>
+      </div>
+
+      <!-- Status Card -->
+      <div id="statusCard" class="status-card">
+        <div class="status-header">
+          <strong style="color: #FFFFFF; font-size: 14px;" id="statusTitle">Call Status</strong>
+          <span class="status-badge queued" id="statusBadge">QUEUED</span>
+        </div>
+        <div class="status-body" id="statusBody">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    ALLIGENT DIGITAL TWIN INTELLIGENCE &bull; POWERED BY TWILIO VOICE API
+  </div>
+
+  <script>
+    const sentenceBox = document.getElementById('sentenceInput');
+    const charCount = document.getElementById('charCount');
+
+    function updateCount() {
+      charCount.textContent = `${sentenceBox.value.length} characters`;
+    }
+    sentenceBox.addEventListener('input', updateCount);
+    updateCount();
+
+    function loadSentence(chip) {
+      const text = chip.querySelector('span:first-child').textContent;
+      sentenceBox.value = text;
+      updateCount();
+      sentenceBox.focus();
+    }
+
+    async function triggerCall() {
+      const btn = document.getElementById('callBtn');
+      const card = document.getElementById('statusCard');
+      const title = document.getElementById('statusTitle');
+      const badge = document.getElementById('statusBadge');
+      const body = document.getElementById('statusBody');
+
+      const phone = document.getElementById('phoneInput').value.trim();
+      const machine = document.getElementById('machineSelect').value;
+      const voice = document.getElementById('voiceSelect').value;
+      const intro = document.getElementById('introCheck').checked;
+      const sentence = sentenceBox.value.trim();
+
+      if (!sentence) {
+        alert('Please enter a sentence for the voice call to speak.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `
+        <svg style="animation: spin 1s linear infinite;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+          <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
+        </svg>
+        <span>Dialing ${phone}...</span>
+      `;
+
+      card.style.display = 'block';
+      card.className = 'status-card';
+      title.textContent = 'Initiating Outbound Voice Call...';
+      badge.textContent = 'CONNECTING';
+      badge.className = 'status-badge queued';
+      body.innerHTML = `Contacting Twilio Voice Gateway to dial <code>${phone}</code>...`;
+
+      try {
+        const response = await fetch('/voice/custom-call', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sentence: sentence,
+            phone_number: phone,
+            machine_id: machine,
+            voice: voice,
+            include_intro: intro
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          card.className = 'status-card success';
+          title.textContent = 'Voice Call Dispatched Successfully!';
+          badge.textContent = 'CALLING NOW';
+          badge.className = 'status-badge queued';
+          body.innerHTML = `
+            <div><strong>Call SID:</strong> <code>${data.call_sid}</code></div>
+            <div style="margin-top: 4px;"><strong>Target Mobile:</strong> <code>${data.to}</code></div>
+            <div style="margin-top: 4px;"><strong>Voice Persona:</strong> <code>${data.voice}</code></div>
+            <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1);">
+              <strong>Spoken Script:</strong> <em>"${data.sentence}"</em>
+            </div>
+            <div style="margin-top: 8px; color: #86EFAC; font-weight: 600;">
+              Your phone is ringing now! Answer the call to hear the sentence.
+            </div>
+          `;
+        } else {
+          card.className = 'status-card error';
+          title.textContent = 'Voice Call Failed';
+          badge.textContent = 'ERROR';
+          badge.className = 'status-badge failed';
+          body.innerHTML = `Error: <code>${data.detail || data.error || 'Unknown failure'}</code>`;
+        }
+      } catch (err) {
+        card.className = 'status-card error';
+        title.textContent = 'Network or Dispatch Error';
+        badge.textContent = 'ERROR';
+        badge.className = 'status-badge failed';
+        body.innerHTML = `Could not connect to backend: <code>${err.message}</code>`;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call My Mobile Now & Speak This Sentence</span>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>

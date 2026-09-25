@@ -1,0 +1,8 @@
+{
+  "name": "Digital Twin Controller",
+  "description": "Minimal mobile remote control panel for physical machines modeled as 3D digital twins in Blender.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "acorn": "^8.18.0",
+    "puppeteer": "^25.12.0"
+  },
+  "name": "factorybrain",
+  "version": "1.0.0",
+  "description": "FactoryBrain is a multi-agent AI investigation system for a smart factory running on a causal digital twin. It uses a graph-based agent orchestrator to detect, correlate, diagnose, verify, and resolve anomalies in real-time.",
+  "main": "check_browser.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "devDependencies": {
+    "@babel/cli": "^8.0.6",
+    "@babel/core": "^8.0.6",
+    "@babel/preset-react": "^8.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

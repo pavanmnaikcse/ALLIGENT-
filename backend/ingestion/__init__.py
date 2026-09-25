@@ -1,0 +1,1 @@
+# FactoryBrain — Ingestion & Evidence Layer

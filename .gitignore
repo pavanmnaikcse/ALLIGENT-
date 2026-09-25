@@ -1,0 +1,75 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments & Secrets
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+*.pem
+*.key
+*.cert
+credentials.json
+service_account.json
+
+# Root Duplicate Datasets (Tracked in data/)
+/comprehensive_machine_dataset.csv
+/machine_failure_dataset.csv
+/xgboost_rul_model.pkl
+
+
+# Node & Frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.turbo/
+.vite/
+
+# Database & Runtime State
+*.log
+logs/
+*.sqlite
+*.sqlite3
+dump.rdb
+
+# Operating System & IDE
+.DS_Store
+Thumbs.db
+ehthumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Temporary & Local Scratch Artifacts
+scripts/archive/
+temp/
+scratch/
+test_screenshot.png

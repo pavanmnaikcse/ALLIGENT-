@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ALLIGENT. — Autonomous Multi-Agent Intelligence for Industrial Failure Investigation</title>
+    <meta name="description" content="ALLIGENT Industrial Intelligence Platform powered by a causal digital twin, 7 specialist AI agents, counterfactual verification, and human decision workflow." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:ital,wght@0,300..700;1,300..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="/assets/index-DNy6fX4w.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BclKclgL.css">
+  </head>
+  <body class="bg-[#E7E3DA] text-[#0d0d0d] antialiased selection:bg-[#9B3418]/20 selection:text-[#9B3418] overflow-x-hidden min-h-screen font-mono">
+    
+    
+    <script>
+        window.__FB_RPM = 1200;
+        window.__FB_TEMP = 40;
+        const OriginalWebSocket = window.WebSocket;
+        window.WebSocket = function(url, protocols) {
+            const ws = new OriginalWebSocket(url, protocols);
+            ws.addEventListener('message', function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    if(data.machines && data.machines['M-04']) {
+                        window.__FB_RPM = data.machines['M-04'].rpm;
+                        window.__FB_TEMP = data.machines['M-04'].temperature_c;
+                    }
+                } catch(e) {}
+            });
+            return ws;
+        };
+        window.WebSocket.prototype = OriginalWebSocket.prototype;
+    </script>
+
+<div id="root"></div>
+
+    
+
+    
+    
+
+  </body>
+</html>
